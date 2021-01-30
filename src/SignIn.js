@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, AsyncStorage } from 'react-native';
 import { login } from "./services/auth";
 import { getUserByToken } from "./services/user";
-import { AsyncStorage } from 'react-native';
 
 class SignIn extends React.Component {
     constructor(props) {
@@ -48,41 +47,40 @@ class SignIn extends React.Component {
         const { navigateTo } = this.props;
 
         return (
-            <View style={styles.row}>
-                <View style={styles.column}>
-                    <View style={styles.box}>
-                        <Text style={styles.header}>Try to login</Text>
+            <View style={styles.column}>
+                <View style={styles.box}>
+                    <Text style={styles.header}>Try to login</Text>
 
-                        <TextInput
-                            style={key === 'email' ? styles.inputError : styles.input}
-                            value={this.state.email}
-                            onChangeText={ email => this.setState({email})}
-                            placeholder="Email"
-                        />
-                        <TextInput
-                            style={key === 'password' ? styles.inputError : styles.input}
-                            secureTextEntry
-                            placeholder="Password"
-                            value={this.state.password}
-                            onChangeText={password => this.setState({password})}
-                        />
-                        <Button
-                            style={styles.btn}
-                            title="Sign in"
-                            onPress={() => this.login()}
-                        />
-
-                        <Button
-                            style={styles.btn}
-                            title="Go to Sign up"
-                            onPress={() => navigateTo('SignUp')}
-                        />
-                        { !!error &&
-                            <Text style={styles.err}>
-                                {error}
-                            </Text>
-                        }
-                    </View>
+                    <TextInput
+                        style={key === 'email' ? styles.inputError : styles.input}
+                        value={this.state.email}
+                        onChangeText={ email => this.setState({email})}
+                        placeholder="Email"
+                    />
+                    <TextInput
+                        style={key === 'password' ? styles.inputError : styles.input}
+                        secureTextEntry
+                        placeholder="Password"
+                        value={this.state.password}
+                        onChangeText={password => this.setState({password})}
+                    />
+                    <View style={styles.distance}/>
+                    <Button
+                        style={styles.btn}
+                        title="Sign in"
+                        onPress={() => this.login()}
+                    />
+                    <View style={styles.distance}/>
+                    <Button
+                        style={styles.btn}
+                        title="Create account"
+                        onPress={() => navigateTo('SignUp')}
+                    />
+                    { !!error &&
+                        <Text style={styles.err}>
+                            {error}
+                        </Text>
+                    }
                 </View>
             </View>
         );
@@ -91,7 +89,7 @@ class SignIn extends React.Component {
 
 const styles = StyleSheet.create({
     inputError: {
-        color: '#3867a6',
+        color: "#102027",
         fontSize: 15,
         fontWeight: 'bold',
         height: 30,
@@ -100,23 +98,29 @@ const styles = StyleSheet.create({
         padding: 5,
         marginBottom: 10,
         marginTop: 5,
-        borderColor: 'red',
+        borderColor: "#102027",
         borderWidth: 1
     },
+
+    distance: {
+      margin: 6
+    },
+
     header: {
-        color: '#fff',
+        color: "#102027",
         alignItems: 'center',
         textAlign: 'center',
         fontSize: 25,
         width: '100%',
         padding: 5,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 20
     },
     input: {
-        color: '#3867a6',
+        color: "#102027",
         fontSize: 15,
         fontWeight: 'bold',
-        height: 30,
+        height: 42,
         backgroundColor: '#fff',
         borderRadius: 5,
         padding: 5,
@@ -128,13 +132,13 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         width: 350,
         height: 280,
-        backgroundColor: '#3867a6',
         padding: 10,
         borderRadius: 10
     },
     column: {
         display: 'flex',
         flexDirection: 'column',
+        alignItems: 'center',
         justifyContent: 'center',
         flex: 1
     },
@@ -145,13 +149,12 @@ const styles = StyleSheet.create({
     },
     btn: {
         width: 350,
-        marginTop: 5,
         color: '#fff',
     },
     err: {
         marginTop: 10,
         width: 330,
-        backgroundColor: "red",
+        backgroundColor: "#102027",
         color: "white",
         padding: 5,
         borderRadius: 5,

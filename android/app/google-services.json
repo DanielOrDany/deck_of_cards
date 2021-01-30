@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "206451807131",
+    "project_id": "card-picker-5fe6d",
+    "storage_bucket": "card-picker-5fe6d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206451807131:android:0680e0001e41bc57c5073e",
+        "android_client_info": {
+          "package_name": "com.rn_lab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "206451807131-oomcl4v2fpp6e1rvcjp6ia39rsi6o866.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQQEAhjmSi31Q9LLdOkx0PtF6Xj5K9A-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "206451807131-oomcl4v2fpp6e1rvcjp6ia39rsi6o866.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

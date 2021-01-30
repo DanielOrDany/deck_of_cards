@@ -22,8 +22,8 @@ class Logo extends React.Component {
 
         return (
             <View style = {styles.logoBackground}>
-                <Text style={styles.logoTextHeader}>Mobile lab</Text>
-                <Text style={styles.logoText}>by Nikulshyn Daniel</Text>
+                <Text style={styles.logoTextHeader}>Business Сards</Text>
+                <Text style={styles.logoText}>deck of 54 cards</Text>
             </View>
         );
     }
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 
     logoBackground: {
         flex: 1,
-        backgroundColor: '#3867a6',
+        backgroundColor: "#102027",
         alignItems: 'center',
         justifyContent: 'center',
     }

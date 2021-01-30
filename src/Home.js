@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, AsyncStorage } from 'react-native';
 import { getUserByToken } from './services/user';
-import { AsyncStorage } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import CurrentCard from "./CurrentCard";
@@ -21,7 +20,6 @@ class Home extends React.Component {
         const userToken = await AsyncStorage.getItem('token');
         const userData = await getUserByToken(userToken);
 
-        console.log(userData);
         if (userData) {
             this.setState({user: userData.data.user});
         } else {
@@ -30,7 +28,7 @@ class Home extends React.Component {
     }
 
     async out() {
-        const {navigateTo} = this.props;
+        const { navigateTo } = this.props;
         await AsyncStorage.setItem('token', null);
         navigateTo('SignIn');
     }
