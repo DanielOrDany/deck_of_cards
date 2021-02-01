@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, AsyncStorage } from 'react-native';
-import { getUserByToken } from './services/user';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import CurrentCard from "./CurrentCard";
@@ -16,20 +15,10 @@ class Home extends React.Component {
         };
     }
 
-    async componentDidMount() {
-        const userToken = await AsyncStorage.getItem('token');
-        const userData = await getUserByToken(userToken);
-
-        if (userData) {
-            this.setState({user: userData.data.user});
-        } else {
-            this.setState({error: "time is out.."});
-        }
-    }
+    componentDidMount() {}
 
     async out() {
         const { navigateTo } = this.props;
-        await AsyncStorage.setItem('token', null);
         navigateTo('SignIn');
     }
 

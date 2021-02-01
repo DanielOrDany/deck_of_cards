@@ -5,6 +5,7 @@ import SignUp from './SignUp.js';
 import SignIn from './SignIn.js';
 import Home from './Home.js';
 import { View } from "react-native";
+//import RemotePushController from "./services/RemotePushController";
 
 class Routes extends React.Component {
     constructor(props) {

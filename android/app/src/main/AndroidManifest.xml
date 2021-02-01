@@ -38,6 +38,8 @@
         </receiver>
         <!-- < Only if you're using GCM or localNotificationSchedule() > -->
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationPublisher" />
+        <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"></receiver>
+        <receiver android:enabled="true" android:exported="true"  android:name="io.invertase.firebase.notifications.RNFirebaseNotificationsRebootReceiver"></receiver>
         <receiver android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationBootEventReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -45,11 +47,16 @@
         </receiver>
         <service android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationRegistrationService"/>
         <!-- < Only if you're using GCM or localNotificationSchedule() > -->
-        <service
-                android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"
-                android:exported="false" >
+<!--        <service-->
+<!--                android:name="com.dieam.reactnativepushnotification.modules.RNPushNotificationListenerServiceGcm"-->
+<!--                android:exported="false" >-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
+        <service android:name="io.invertase.firebase.messaging.RNFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <!-- </ Only if you're using GCM or localNotificationSchedule() > -->

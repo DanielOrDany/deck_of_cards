@@ -1,13 +1,41 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Animated, TouchableWithoutFeedback } from 'react-native';
 import { pushNotifications } from './services';
+import firebase from "firebase/app";
+
+const cardsRef = firebase.firestore().collection("cards");
+const usersProfileRef = firebase.firestore().collection("usersProfile");
 
 class CurrentCard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             animation: new Animated.Value(0),
+            card: {}
         };
+    }
+
+    async componentDidMount() {
+        const userData = firebase.auth().currentUser;
+        const email = userData.email;
+
+        usersProfileRef
+            .where("email", "==", email)
+            .get()
+            .then(users => {
+                users.forEach(user => {
+                    const lastCardId = [...user.data().gotCards].pop();
+                    cardsRef
+                        .doc(lastCardId)
+                        .get()
+                        .then(card => {
+                            console.log(card);
+                            const lastCard = {};
+                            lastCard = card.data();
+                            this.setState({card: lastCard});
+                        });
+                });
+            });
     }
 
     startAnimation = () => {
@@ -29,6 +57,10 @@ class CurrentCard extends React.Component {
     }
 
     render() {
+        const { card } = this.state;
+
+        console.log("CARD", card);
+
         const xInterpolate = this.state.animation.interpolate({
             inputRange: [0, 1],
             outputRange: ["0deg", "360deg"],
@@ -46,7 +78,7 @@ class CurrentCard extends React.Component {
         return (
             <View style={styles.currentCardScreen}>
                 <Text style={styles.currentCardDaily}>Daily card</Text>
-                <TouchableWithoutFeedback onPress={this.startAnimation}>
+                <TouchableWithoutFeedback onPress={this.out}>
                     <Animated.View style={[styles.box, animatedStyles]}>
                         <View style={styles.currentCardBox}>
                             <Text style={styles.currentCardTitle}>Владение - Пользовани</Text>

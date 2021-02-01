@@ -1,4 +1,8 @@
 import PushNotification from 'react-native-push-notification';
+import firebase from "firebase/app";
+
+const cardsRef = firebase.firestore().collection("cards");
+const usersProfileRef = firebase.firestore().collection("usersProfile");
 
 const configure = () => {
     PushNotification.configure({
@@ -11,6 +15,41 @@ const configure = () => {
         onNotification: function(notification) {
             // process the notification
             console.log(notification);
+            const userData = firebase.auth().currentUser;
+            console.log("userData", userData.email);
+            if (userData) {
+                const email = userData.email;
+
+                usersProfileRef
+                    .where("email", "==", email)
+                    .get()
+                    .then(users => {
+                        users.forEach(user => {
+                            const userId = user.id;
+                            const userData = user.data();
+                            const userCards = userData.gotCards;
+                            cardsRef.get().then(cards => {
+                                const allCards = [];
+                                cards.forEach(card => {
+                                    if (!userCards.includes(card.id)) {
+                                        allCards.push(card.id);
+                                    }
+                                });
+                                if (allCards.length) {
+                                    userCards.push(allCards[Math.random() * allCards.length]);
+                                    usersProfileRef.doc(userId).set({
+                                        email: userData.email,
+                                        gotCards: userCards
+                                    });
+                                }
+                            });
+                        });
+                    });
+            }
+        },
+
+        onRegistrationError: function(err) {
+            console.error(err.message, err);
         },
 
         permissions: {
@@ -19,9 +58,9 @@ const configure = () => {
             sound: true
         },
 
+        senderID: '206451807131',
         popInitialNotification: true,
         requestPermissions: true,
-
     });
 };
 

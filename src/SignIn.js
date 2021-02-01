@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput, AsyncStorage } from 'react-native';
-import { login } from "./services/auth";
-import { getUserByToken } from "./services/user";
+import firebase from "firebase";
 
 class SignIn extends React.Component {
     constructor(props) {
@@ -15,31 +14,28 @@ class SignIn extends React.Component {
 
     async componentDidMount() {
         const { navigateTo } = this.props;
-        const userToken = await AsyncStorage.getItem('token');
-        const userData = await getUserByToken(userToken);
+        const userData = firebase.auth().currentUser;
 
         if (userData) {
-            this.setState({user: userData.data.user});
             navigateTo('Home');
         }
     }
 
     login = async () => {
-        const result = await login(this.state.email, this.state.password);
         const { navigateTo } = this.props;
 
-        if (!result.data.success) {
-            this.setState({error: result.data.message});
-
-            if (result.data.key) {
-                this.setState({key: result.data.key});
-            } else {
-                this.setState({key: ""});
-            }
-        } else {
-            await AsyncStorage.setItem("token", result.data.token);
-            navigateTo('Home');
-        }
+        firebase
+            .auth()
+            .signInWithEmailAndPassword(this.state.email, this.state.password)
+            .then(async (data) => {
+                console.log(data.user);
+                this.setState({user: data.user});
+                navigateTo('Home');
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({error: err.message});
+            });
     };
 
     render() {

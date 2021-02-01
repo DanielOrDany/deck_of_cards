@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-import { register } from "./services/auth";
-import { getUserByToken } from "./services/user";
-import { AsyncStorage } from 'react-native';
+import firebase from "firebase";
+
+const usersProfileRef = firebase.firestore().collection("usersProfile");
 
 class SignUp extends React.Component {
     constructor(props) {
@@ -11,40 +11,43 @@ class SignUp extends React.Component {
             email: "",
             password: "",
             name: "",
-            phone: "",
             error: ""
         };
     }
 
     async componentDidMount() {
         const { navigateTo } = this.props;
-        const userToken = await AsyncStorage.getItem('token');
-        const userData = await getUserByToken(userToken);
+        const userData = firebase.auth().currentUser;
 
         if (userData) {
-            this.setState({user: userData.data.user});
+            this.setState({user: userData});
             navigateTo('Home');
         }
     }
 
     register = async () => {
-        const result = await register(this.state.name, this.state.phone, this.state.email, this.state.password);
         const { navigateTo } = this.props;
 
-        if (!result.data.success) {
-            this.setState({error: result.data.message});
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.state.email, this.state.password)
+            .then(res => {
+                usersProfileRef.doc().set({
+                    email: this.state.email,
+                    name: this.state.name,
+                    gotCards: []
+                }).then(function() {
+                    console.log("Document successfully written!");
+                }).catch(function(error) {
+                    console.error("Error writing document: ", error);
+                });
 
-            if (result.data.key) {
-
-                this.setState({key: result.data.key});
-            } else {
-
-                this.setState({key: ""});
-            }
-        } else {
-            await AsyncStorage.setItem("token", result.data.token);
-            navigateTo('Home');
-        }
+                res.user.updateProfile({
+                    displayName: this.state.name
+                });
+            })
+            .then((data) => navigateTo('Home'))
+            .catch((err) => this.setState({error: err.message}));
     };
 
     render() {
@@ -62,12 +65,6 @@ class SignUp extends React.Component {
                         value={this.state.name}
                         onChangeText={ name => this.setState({name})}
                         placeholder="Name"
-                    />
-                    <TextInput
-                        placeholder="Phone"
-                        style={key === 'phone' ? styles.inputError : styles.input}
-                        value={this.state.phone}
-                        onChangeText={phone => this.setState({phone})}
                     />
                     <TextInput
                         style={key === 'email' ? styles.inputError : styles.input}
